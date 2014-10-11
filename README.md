@@ -1,4 +1,4 @@
-vraster
+Taller sobre visualización de datos raster
 =======
 
-  Taller sobre visualización de datos raster
+  
