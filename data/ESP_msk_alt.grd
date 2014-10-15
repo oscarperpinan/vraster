@@ -1,0 +1,23 @@
+[General]
+Creator=DIVA-GIS gdata
+Title=alt
+Created=20070315
+
+[GeoReference]
+Projection=GEOGRAPHIC
+Datum=WGS84
+Mapunits=Degrees
+Columns=1656
+Rows=1044
+MinX=-9.399991102517
+MaxX=4.400009617209
+MinY=35.19999714196
+MaxY=43.8999975957
+ResolutionX=0.008333333768
+ResolutionY=0.008333333768
+
+[Data]
+MinValue=-13
+MaxValue=3322
+NoDataValue=-9999
+DataType=SMALLINT
