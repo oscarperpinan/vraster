@@ -2,7 +2,7 @@
 #+AUTHOR:    Oscar Perpiñán Lamigueiro
 #+DATE: 24 de Octubre de 2014
 
-#+OPTIONS: H:2
+#+OPTIONS: H:3
 #+PROPERTY: eval no
 #+PROPERTY: exports both 
 #+PROPERTY: results output graphics
@@ -10,7 +10,16 @@
 * Introducción
 
 ** Datos raster
-** Paquete raster
+*** Datos raster
+**** 
+Los datos raster consisten en una matriz de celdas cuadradas o
+rectangulares organizadas en filas y columnas en la que cada celda
+contiene un valor que representa información (temperatura, altitud,
+uso del terreno). La localización geográfica de cada celda es
+implícita, dependiendo del lugar que ocupa en la rejilla.
+
+** Paquete =raster= 
+*** =raster=
 
 - Define funciones para crear, leer, manipular y escribir datos raster.
 - Implementa algebra raster y funciones de uso común en GIS.
@@ -20,52 +29,51 @@
   - =RasterBrick=
   - =RasterStack=
 
-** Paquete raster
+**** Introduction to raster
+http://cran.r-project.org/web/packages/raster/vignettes/Raster.pdf
+
+*** Álgebra raster
 
 - Funciones básicas: =abs=, =round=, =ceiling=, =floor=, =trunc=,
   =sqrt=, =log=, =log10=, =exp=, =cos=, =sin=, =max=, =min=, =range=,
   =prod=, =sum=, =any=, =all=.
 - Se pueden mezclar objetos =Raster*= con números.
-
-** Funciones para modificar contenido y extensión, o para combinar objetos:
-
-  - The =crop= function takes a geographic subset of a larger
-    =Raster*= object. =trim= crops a =RasterLayer=
-    by removing the outer rows and columns that only contain =NA=
-    values. =extend= adds new rows and/or columns with
-    =NA= values.
-  - The =merge= function merges two or more =Raster*=
-    objects into a single new object.
-  - =projectRaster= transforms values of a =Raster*=
-    object to a new object with a different coordinate reference system.
-** Funciones para modificar contenido y extensión, o para combinar objetos:
-  - With =overlay=, multiple =Raster*= objects can be
-    combined (for example, multiply them).
-  - =mask= removes all values from one layer that are
-    =NA= in another layer, and =cover= combines two layers
-    by taking the values of the first layer except where these are
-    =NA=.
-** Funciones para modificar contenido y extensión, o para combinar objetos:
-  - =calc= computes a function for a =Raster*=
-    object. With =RasterLayer= objects, another
-    =RasterLayer= is returned. With multilayer objects the result
-    depends on the function: With a summary function (=sum=,
-    =max=, etc.),  =calc= returns a =RasterLayer=
-    object, and a =RasterBrick= object otherwise.
-  - =stackApply= computes summary layers for subsets of a
-    =RasterStack= or =RasterBrick=.
-** Funciones para modificar contenido y extensión, o para combinar objetos:
-  - =cut= and =reclassify= replace ranges of values
-    with single values.
-  - =zonal= computes zonal statistics, that is, summarizes a
-    =Raster*= object using zones (areas with the same integer
-    number) defined by another =RasterLayer=.
-
+  
+*** Funciones para modificar extensión
+  - =crop= extrae una región geográfica de un objeto =Raster*=
+  - =trim= elimina las filas y columnas externas que sólo contienen =NA=.
+  - =extend= añade filas y columnas con =NA=.
+  - =merge= junta dos =Raster= en un nuevo objeto de mayor extensión.
+  - =projectRaster= produce un nuevo =Raster*= con nuevo sistema de referencia geográfica.
+*** Funciones para modificar contenido
+  - =mask= elimina de una capa los valores que son =NA= en otra.
+  - =cover= combina dos capas cogiendo los valores de la primera, excepto allí donde son =NA=.
+*** Funciones para combinar objetos.
+  - Con =overlay= se pueden combinar múltiples =Raster*= (por ejemplo, para multiplicarlos).
+  - =calc= aplica una función en un objeto =Raster*=.
+  - =stackApply= agrega capas de un =RasterStack= or =RasterBrick=.
+*** Funciones para extraer información
+  - =cut= y =reclassify= reemplazan rangos de valores por un único valor (de cuantitativo a cualitativo).
+  - =zonal= aplica una función por zonas definidas por un determinado valor entero recogido en un =RasterLayer=.
 ** Paquete =rasterVis=
+*** =rasterVis=
+**** Métodos de visualización de datos raster basados en gráficos =grid=
+**** http://oscarperpinan.github.io/rastervis/
+
 
 * Datos Cuantitativos
 
 ** Datos
+
+*** Radiación solar de CM SAF
+**** CM SAF
+ - http://dx.doi.org/10.5676/EUM_SAF_CM/RAD_MVIRI/V001
+ - Promedio anual de la radiación global en el plano horizontal
+   (shortwave incoming solar radiation, SIS) en España durante 2008.
+
+** =levelplot=
+
+*** Representación básica
 #+begin_src R :results output graphics :exports both :file figs/leveplotSISavOrig.pdf
   library(raster)
   library(rasterVis)
@@ -73,11 +81,11 @@
   levelplot(SISav)
 #+end_src
 
-** 
+*** 
 #+RESULTS:
 [[file:figs/leveplotSISavOrig.pdf]]
 
-** Fronteras
+*** Fronteras
 #+begin_src R 
   library(maps)
   library(mapdata)
@@ -91,7 +99,7 @@
                                  proj4string=CRS(projection(SISav)))
 #+end_src
 
-** Fronteras
+*** 
 #+begin_src R :results output graphics :exports both :file figs/leveplotSISavBoundaries.pdf
   levelplot(SISav) + layer(sp.lines(boundaries, lwd=0.5))
 #+end_src
@@ -99,20 +107,21 @@
 #+RESULTS:
 [[file:figs/leveplotSISavBoundaries.pdf]]
 
-** Hill shading
+** Hill Shading
+*** DEM
 
-- Download a Digital Elevation Model (DEM) from the DIVA-GIS service.
+- Obtenemos un modelo digital del terreno (DEM) de DIVA-GIS.
 
 #+begin_src R :eval no-export
   old <- setwd(tempdir())
-  download.file('http://biogeo.ucdavis.edu/data/diva/msk_alt/ESP_msk_alt.zip, 'ESP_msk_alt.zip')
+  download.file('http://biogeo.ucdavis.edu/data/diva/msk_alt/ESP_msk_alt.zip', 'ESP_msk_alt.zip')
   unzip('ESP_msk_alt.zip', exdir='.')
   
   DEM <- raster('ESP_msk_alt')
 #+end_src
 
-** Hill shading
-- Compute the hill shade raster with =terrain= and =hillShade= from =raster=.
+*** =terrain= y =hillShade=
+- Calculamos el sombreado con =terrain= and =hillShade= de =raster=.
 
 #+begin_src R
   slope <- terrain(DEM, 'slope')
@@ -125,12 +134,13 @@
   setwd(old)
 #+end_src
 
-** Hill Shading
-- Combine the result with the previous map using semitransparency.
+*** Combinamos con transparencia
+- Combinamos la capa de sombreado usando transparencia parcial
 
 #+begin_src R :results output graphics :exports both :width 2000 :height 2000 :res 300 :file figs/hillShading.png
   ## hillShade theme: gray colors and semitransparency
-  hsTheme <- modifyList(GrTheme(), list(regions=list(alpha=0.6)))
+  hsTheme <- modifyList(GrTheme(),
+                        list(regions=list(alpha=0.6)))
   
   levelplot(SISav, panel=panel.levelplot.raster,
             margin=FALSE, colorkey=FALSE) +
@@ -138,30 +148,35 @@
       layer(sp.lines(boundaries, lwd=0.5))
 #+end_src
 
-** 
+*** 
 #+RESULTS:
 [[file:figs/hillShading.png]]
 
 ** 3D
 
+*** =plot3D= y =rgl=
 #+begin_src R
   plot3D(DEM, maxpixels=5e4)
 #+end_src
 
-The output scene can be exported to several formats such as WebGL with
-=writeWebGL= to be rendered in a browser, or =STL= with =writeSTL=, a
-format commonly used in 3D printing. Files using this format are
-[[https://github.com/oscarperpinan/spacetime-vis/blob/gh-pages/images/DEM.stl][viewed easily on GitHub]].
+**** 
+El resultado puede exportarse en varios formatos tales como WebGL
+usando =writeWebGL= (para un navegador), o =STL= con =writeSTL= para
+impresión 3D. Este último formato se puede [[https://github.com/oscarperpinan/spacetime-vis/blob/gh-pages/images/DEM.stl][ver en GitHub]].
 
 #+begin_src R :eval no-export
 writeSTL('figs/DEM.stl')
 #+end_src
 
 * Datos Categóricos
+
 ** Datos
-This section illustrates how to read and display rasters with
-categorical information using information from the NEO-NASA
-project. 
+
+*** NEO-NASA
+- Uso del terreno
+  -  http://neo.sci.gsfc.nasa.gov/Search.html?group=20
+- Densidad de población
+  - http://neo.sci.gsfc.nasa.gov/Search.html?group=64
 #+begin_src R :eval no-export
   library(raster)
   ## China and India  
@@ -175,7 +190,7 @@ project.
   landClass <- crop(landClass, ext)
 #+end_src
 
-** RAT
+*** RAT: =cut= y =ratify= 
 
 #+begin_src R
   landClass[landClass %in% c(0, 254)] <- NA
@@ -196,12 +211,10 @@ project.
   levels(landClass) <- rat
 #+end_src
 
-** levelplot
+** =levelplot=
 
-
-#+begin_src R :results output graphics :exports both :file figs/landClass.pdf
-  library(rasterVis)
-  
+*** Paleta de colores
+#+begin_src R
   pal <- c('palegreen4', # Forest
            'lightgoldenrod', # Land
            'indianred4', # Urban
@@ -211,16 +224,18 @@ project.
                          list(panel.background = list(col='lightskyblue1'),
                               regions = list(col= pal)))
   
+#+end_src
+*** 
+#+begin_src R :results output graphics :exports both :file figs/landClass.pdf
   levelplot(landClass, maxpixels=3.5e5, par.settings=catTheme,
             panel=panel.levelplot.raster)
 #+end_src
-
-** 
+    
 #+RESULTS:
 [[file:figs/landClass.pdf]]
 
-** Relación con cuantitativos
-
+** Datos cualitativos como variable de agrupación
+*** Usamos cuantitativos como referencia 
 
 #+begin_src R :results output graphics :exports both :file figs/populationNASA.pdf
   pPop <- levelplot(pop, zscaleLog=10, par.settings=BTCTheme,
@@ -228,11 +243,10 @@ project.
   pPop
 #+end_src
 
-** 
 #+RESULTS:
 [[file:figs/populationNASA.pdf]]
 
-** Histograma
+*** Comparamos: histograma
 #+begin_src R :results output graphics :exports both :file figs/histogramLandClass.pdf
   s <- stack(pop, landClass)
   names(s) <- c('pop', 'landClass')
@@ -243,12 +257,16 @@ project.
 #+RESULTS:
 [[file:figs/histogramLandClass.pdf]]
 
+*** Más comparaciones:
+
+- =xyplot=
+- =densityplot=
 
 * Raster Espacio-Temporales
-** Introducción
 
 ** Datos
 
+*** Radiación solar en Galicia (2011)
 #+begin_src R 
   library(raster)
   library(zoo)
@@ -264,6 +282,8 @@ project.
 
 ** Level Plots
 
+*** Small multiple
+
 #+begin_src R :results output graphics :exports both :file figs/SISdm.pdf
   levelplot(SISdm, layers=1:12, panel=panel.levelplot.raster)
 #+end_src
@@ -272,13 +292,11 @@ project.
 #+RESULTS:
 [[file:figs/SISdm.pdf]]
 
-** zApply
-
+*** Reducimos número de capas: =zApply=
 #+begin_src R 
   SISmm <- zApply(SISdm, by=as.yearmon, fun='mean')
 #+end_src
 
-** 
 #+begin_src R :results output graphics :exports both :file figs/SISmm.pdf
   levelplot(SISmm, panel=panel.levelplot.raster)
 #+end_src
@@ -286,10 +304,10 @@ project.
 #+RESULTS:
 [[file:figs/SISmm.pdf]]
 
-** Graphical Exploratory Data Analysis
+** Gráficos EDA (Exploratory Data Analysis)
 
 
-** Histogram
+*** Histograma
 #+begin_src R :results output graphics :exports both :file figs/SISdm_histogram.pdf
   histogram(SISdm, FUN=as.yearmon)
 #+end_src
@@ -297,7 +315,7 @@ project.
 #+RESULTS:
 [[file:figs/SISdm_histogram.pdf]]
 
-** BWPlot
+*** Violin plot
 #+begin_src R :results output graphics :exports both :file figs/SISdm_boxplot.pdf
   bwplot(SISdm, FUN=as.yearmon)
 #+end_src
@@ -305,7 +323,7 @@ project.
 #+RESULTS:
 [[file:figs/SISdm_boxplot.pdf]]
 
-** Splom
+*** Matriz de gráficos de dispersión
 #+begin_src R :results output graphics :exports both :file figs/SISmm_splom.png :width 4000 :height 4000 :res 600
   splom(SISmm, xlab='', plot.loess=TRUE)
 #+end_src
@@ -314,18 +332,16 @@ project.
 [[file:figs/SISmm_splom.png]]
 
 
-** Space-Time and Time Series Plots
+** Gráficos espacio temporales
 
-
-
-** Hovmoller
+*** Hovmoller
 #+begin_src R :results output graphics :exports both :file figs/SISdm_hovmoller_lat.pdf
   hovmoller(SISdm, par.settings=BTCTheme())
 #+end_src
 #+RESULTS:
 [[file:figs/SISdm_hovmoller_lat.pdf]]
 
-** xyplot
+*** xyplot
 #+begin_src R :results output graphics :exports both :file figs/SISmm_xyplot.png :width 2000 :height 2000 :res 300
   xyplot(SISdm, digits=1, col='black', lwd=0.2, alpha=0.6)
 #+end_src
@@ -333,7 +349,7 @@ project.
 #+RESULTS:
 [[file:figs/SISmm_xyplot.png]]
 
-** Horizonplot
+*** Horizonplot
 
 #+begin_src R :results output graphics :exports both :file figs/SISdm_horizonplot.pdf
   horizonplot(SISdm, digits=1,
@@ -345,8 +361,10 @@ project.
 [[file:figs/SISdm_horizonplot.pdf]]
 
 
-** Animation
+** Animación
 
+*** Datos de Meteogalicia
+- Predicción horaria de cobertura nubosa
 #+begin_src R
   cft <- brick('data/cft_20130417_0000.nc')
   ## use memory instead of file
@@ -360,8 +378,10 @@ project.
   names(cft) <- format(timeIndex, 'D%d_H%H')
 #+end_src
 
+**** http://mandeo.meteogalicia.es/thredds/catalogos/WRF_2D/catalog.html
 
-** Spatial Context: Administrative Boundaries
+
+*** Referencia espacial: fronteras administrativas
 #+begin_src R 
   library(maptools)
   library(rgdal)
@@ -380,12 +400,14 @@ project.
 #+end_src
 
 
-** Producing the Frames and the Movie
+*** Generamos imágenes para una película
 
+- Definimos la paleta de colores
 #+begin_src R 
   cloudTheme <- rasterTheme(region=brewer.pal(n=9, 'Blues'))
 #+end_src
 
+- Con =layout(1, 1)= generamos un fichero por cada capa.
 #+begin_src R :eval no-export
   tmp <- tempdir()
   trellis.device(png, file=paste0(tmp, '/Rplot%02d.png'),
@@ -395,7 +417,7 @@ project.
   dev.off()
 #+end_src
 
-** ffmpeg
+*** Componemos la película con ffmpeg
 
 #+begin_src R :eval no-export
   old <- setwd(tmp)
@@ -407,9 +429,10 @@ project.
   setwd(old)
 #+end_src
 
-[[http://vimeo.com/user18057623/cft][Video]]
+**** 
+     [[http://vimeo.com/user18057623/cft][Video]]
 
-** Static Image
+*** Como referencia: small multiple
 
 #+begin_src R :results output graphics :exports both :file figs/cft.pdf
   levelplot(cft, layers=25:48, layout=c(6, 4),
@@ -424,9 +447,10 @@ project.
 
 
 * Campos Vectoriales
-** Introducción
 
-** Data
+** Datos
+
+*** Predicciones de viento de Meteogalicia
 #+begin_src R 
   library(raster)
   library(rasterVis)
@@ -438,19 +462,32 @@ project.
 #+end_src
 
 
-** Vectorplot
+** Gráficos de flechas
+*** =vectorplot=
+
+- En puntos discretos (muestreando el raster) se dibuja una flecha con dirección y sentido las del campo en ese punto, y con una longitud proporcional a la magnitud del campo.
+
 #+begin_src R :results output graphics :exports both :file figs/vectorplot.pdf
   vectorplot(windField, isField=TRUE, par.settings=BTCTheme(),
              colorkey=FALSE, scales=list(draw=FALSE))
 #+end_src
 
-
+*** 
 #+RESULTS:
 [[file:figs/vectorplot.pdf]]
 
-** streamlines
+** Streamlines
+*** FROLIC
+- Curvas integrales, líneas de flujo (/streamlines/).
+- Algoritmo (adaptado de [[https://www.cg.tuwien.ac.at/research/vis-dyn-syst/frolic/frolic_crc.pdf][FROLIC]]):
+  - En cada punto (/droplet/) de una
+    rejilla regular, se calcula una pequeña porción de la línea de
+    flujo (/streamlet/) integrando el campo vectorial en ese punto.
+  - El color principal de cada /streamlet/ indica la magnitud local del campo.
+  - Cada /streamlet/ está compuesta por puntos cuyos tamaños,
+    posición, y degradación, codifican la dirección local del campo.
 
-** streamplot
+*** =streamplot=
 #+begin_src R :results output graphics :exports both :file figs/streamplot.pdf
   myTheme <- streamTheme(region=rev(brewer.pal(n=4, name='Greys')),
                                       symbol=BTC(n=9, beg=20))
@@ -462,11 +499,11 @@ project.
              panel=panel.levelplot.raster)
 #+end_src
 
-** 
+*** 
 #+RESULTS:
 [[file:figs/streamplot.pdf]]
 
-** 
+*** Tu turno
 #+LANGUAGE:  es
 #+OPTIONS:   num:t toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
@@ -482,7 +519,7 @@ project.
 #+BEAMER_THEME: Goettingen
 #+BEAMER_COLOR_THEME: rose
 #+BEAMER_FONT_THEME: serif
-#+LATEX_HEADER: \AtBeginSection[]{\begin{frame}[plain]\tableofcontents[currentsection,hideallsubsections]\end{frame}}
+#+LATEX_HEADER: \AtBeginSubsection[]{\begin{frame}[plain]\tableofcontents[currentsubsection,sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]\end{frame}}
 #+LATEX_HEADER: \lstset{keywordstyle=\color{blue}, commentstyle=\color{gray!90}, basicstyle=\ttfamily\small, columns=fullflexible, breaklines=true,linewidth=\textwidth, backgroundcolor=\color{gray!23}, basewidth={0.5em,0.4em}, literate={á}{{\'a}}1 {ñ}{{\~n}}1 {é}{{\'e}}1 {ó}{{\'o}}1 {º}{{\textordmasculine}}1}
 #+LATEX_HEADER: \usepackage{mathpazo}
 #+LATEX_HEADER: \hypersetup{colorlinks=true, linkcolor=Blue, urlcolor=Blue}
