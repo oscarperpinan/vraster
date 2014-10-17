@@ -1,4 +1,4 @@
-% Created 2014-10-17 vie 12:38
+% Created 2014-10-17 vie 14:31
 \documentclass[xcolor={usenames,svgnames,dvipsnames}]{beamer}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -44,8 +44,8 @@
 
 \subsection{Datos raster}
 \label{sec-1-1}
-\begin{frame}[label=sec-1-1-1]{Datos raster}
-\begin{block}{}
+\begin{frame}[label=sec-1-1-1]{}
+\begin{block}{Datos raster}
 Los datos raster consisten en una matriz de celdas cuadradas o
 rectangulares organizadas en filas y columnas en la que cada celda
 contiene un valor que representa información (temperatura, altitud,
@@ -113,10 +113,11 @@ implícita, dependiendo del lugar que ocupa en la rejilla.
 \end{frame}
 \subsection{Paquete \texttt{rasterVis}}
 \label{sec-1-3}
-\begin{frame}[fragile,label=sec-1-3-1]{\texttt{rasterVis}}
- \begin{block}{Métodos de visualización de datos raster basados en gráficos \texttt{grid}}
-\end{block}
-\begin{block}{\url{http://oscarperpinan.github.io/rastervis/}}
+\begin{frame}[fragile,label=sec-1-3-1]{}
+ \begin{block}{\texttt{rasterVis}}
+Métodos de visualización de datos raster basados en gráficos \texttt{grid}
+
+\url{http://oscarperpinan.github.io/rastervis/}
 \end{block}
 \end{frame}
 
@@ -130,9 +131,9 @@ implícita, dependiendo del lugar que ocupa en la rejilla.
 \begin{frame}[label=sec-2-1-1]{Radiación solar de CM SAF}
 \begin{block}{CM SAF}
 \begin{itemize}
-\item \url{http://dx.doi.org/10.5676/EUM_SAF_CM/RAD_MVIRI/V001}
 \item Promedio anual de la radiación global en el plano horizontal
 (shortwave incoming solar radiation, SIS) en España durante 2008.
+\item \url{http://dx.doi.org/10.5676/EUM_SAF_CM/RAD_MVIRI/V001}
 \end{itemize}
 \end{block}
 \end{frame}
@@ -173,13 +174,14 @@ implícita, dependiendo del lugar que ocupa en la rejilla.
 \begin{frame}[fragile,label=sec-2-2-4]{}
  \lstset{language=R,label= ,caption= ,numbers=none}
 \begin{lstlisting}
-  levelplot(SISav) + layer(sp.lines(boundaries, lwd=0.5))
+  levelplot(SISav) + layer(sp.lines(boundaries,
+                                    lwd=0.5))
 \end{lstlisting}
 
 \includegraphics[width=.9\linewidth]{figs/leveplotSISavBoundaries.pdf}
 \end{frame}
 
-\subsection{Hill Shading}
+\subsection{Ejemplo avanzado: Hill Shading}
 \label{sec-2-3}
 \begin{frame}[fragile,label=sec-2-3-1]{DEM}
  \begin{itemize}
@@ -228,7 +230,8 @@ implícita, dependiendo del lugar que ocupa en la rejilla.
   
   levelplot(SISav, panel=panel.levelplot.raster,
             margin=FALSE, colorkey=FALSE) +
-      levelplot(hs, par.settings=hsTheme, maxpixels=1e6) +
+      levelplot(hs, par.settings=hsTheme,
+                maxpixels=1e6) +
       layer(sp.lines(boundaries, lwd=0.5))
 \end{lstlisting}
 \end{frame}
@@ -249,7 +252,9 @@ implícita, dependiendo del lugar que ocupa en la rejilla.
 \begin{block}{}
 El resultado puede exportarse en varios formatos tales como WebGL
 usando \texttt{writeWebGL} (para un navegador), o \texttt{STL} con \texttt{writeSTL} para
-impresión 3D. Este último formato se puede \href{https://github.com/oscarperpinan/spacetime-vis/blob/gh-pages/images/DEM.stl}{ver en GitHub}.
+impresión 3D. 
+
+Este último formato se puede \href{https://github.com/oscarperpinan/spacetime-vis/blob/gh-pages/images/DEM.stl}{ver en GitHub}.
 
 \lstset{language=R,label= ,caption= ,numbers=none}
 \begin{lstlisting}
@@ -277,7 +282,6 @@ writeSTL('figs/DEM.stl')
 \end{itemize}
 \lstset{language=R,label= ,caption= ,numbers=none}
 \begin{lstlisting}
-  library(raster)
   ## China and India  
   ext <- extent(65, 135, 5, 55)
   
@@ -290,7 +294,8 @@ writeSTL('figs/DEM.stl')
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}[fragile,label=sec-3-1-2]{RAT: \texttt{cut} y \texttt{ratify}}
+
+\begin{frame}[fragile,label=sec-3-1-2]{RAT: \texttt{cut}}
  \lstset{language=R,label= ,caption= ,numbers=none}
 \begin{lstlisting}
   landClass[landClass %in% c(0, 254)] <- NA
@@ -300,6 +305,13 @@ writeSTL('figs/DEM.stl')
   ## Agricultural/Urban: 12:14
   ## Snow: 15:16
   landClass <- cut(landClass, c(0, 5, 11, 14, 16))
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile,label=sec-3-1-3]{RAT: \texttt{ratify}}
+ \lstset{language=R,label= ,caption= ,numbers=none}
+\begin{lstlisting}
   ## Add a Raster Attribute Table and define the raster as categorical data
   landClass <- ratify(landClass)
   ## Configure the RAT: first create a RAT data.frame using the
@@ -311,6 +323,7 @@ writeSTL('figs/DEM.stl')
   levels(landClass) <- rat
 \end{lstlisting}
 \end{frame}
+
 
 \subsection{\texttt{levelplot}}
 \label{sec-3-2}
@@ -324,14 +337,16 @@ writeSTL('figs/DEM.stl')
            'snow3')      # Snow
   
   catTheme <- modifyList(rasterTheme(),
-                         list(panel.background = list(col='lightskyblue1'),
+                         list(panel.background = list(
+                                  col='lightskyblue1'),
                               regions = list(col= pal)))
 \end{lstlisting}
 \end{frame}
 \begin{frame}[fragile,label=sec-3-2-2]{}
  \lstset{language=R,label= ,caption= ,numbers=none}
 \begin{lstlisting}
-  levelplot(landClass, maxpixels=3.5e5, par.settings=catTheme,
+  levelplot(landClass, maxpixels=3.5e5,
+            par.settings=catTheme,
             panel=panel.levelplot.raster)
 \end{lstlisting}
 
@@ -343,15 +358,19 @@ writeSTL('figs/DEM.stl')
 \begin{frame}[fragile,label=sec-3-3-1]{Usamos cuantitativos como referencia}
  \lstset{language=R,label= ,caption= ,numbers=none}
 \begin{lstlisting}
-  pPop <- levelplot(pop, zscaleLog=10, par.settings=BTCTheme,
-                    maxpixels=3.5e5, panel=panel.levelplot.raster)
+  pPop <- levelplot(pop, zscaleLog=10,
+                    par.settings=BTCTheme,
+                    maxpixels=3.5e5,
+                    panel=panel.levelplot.raster)
   pPop
 \end{lstlisting}
+\end{frame}
 
+\begin{frame}[label=sec-3-3-2]{}
 \includegraphics[width=.9\linewidth]{figs/populationNASA.pdf}
 \end{frame}
 
-\begin{frame}[fragile,label=sec-3-3-2]{Comparamos: histograma}
+\begin{frame}[fragile,label=sec-3-3-3]{Comparamos: histograma}
  \lstset{language=R,label= ,caption= ,numbers=none}
 \begin{lstlisting}
   s <- stack(pop, landClass)
@@ -359,15 +378,45 @@ writeSTL('figs/DEM.stl')
   histogram(~log10(pop)|landClass, data=s,
             scales=list(relation='free'))
 \end{lstlisting}
-
+\end{frame}
+\begin{frame}[label=sec-3-3-4]{}
 \includegraphics[width=.9\linewidth]{figs/histogramLandClass.pdf}
 \end{frame}
 
-\begin{frame}[fragile,label=sec-3-3-3]{Más comparaciones:}
+\begin{frame}[fragile,label=sec-3-3-5]{Más comparaciones: gráficos de densidad}
  \begin{itemize}
-\item \texttt{xyplot}
-\item \texttt{densityplot}
+\item ¿Cómo son las distribuciones en diferentes rangos de latitud y uso de tierra?
 \end{itemize}
+\lstset{language=R,label= ,caption= ,numbers=none}
+\begin{lstlisting}
+densityplot(~log10(pop)|cut(y, 4),
+            groups = landClass,
+            data = s,
+            scales = list(y = list(
+                              relation = 'free')))
+\end{lstlisting}
+\end{frame}
+\begin{frame}[label=sec-3-3-6]{}
+\includegraphics[width=.9\linewidth]{figs/densityplotLandClass.png}
+\end{frame}
+
+\begin{frame}[fragile,label=sec-3-3-7]{Más comparaciones: gráficos de dispersión}
+ \begin{itemize}
+\item ¿Hay relación entre la población, el uso del suelo y la latitud/longitud?
+\end{itemize}
+\lstset{language=R,label= ,caption= ,numbers=none}
+\begin{lstlisting}
+xyplot(log10(pop) ~ y + x,
+       groups = landClass,
+       data = s,
+       auto.key = list(space = 'right'),
+       scales = list(x = list(
+                         relation = 'free')))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[label=sec-3-3-8]{}
+\includegraphics[width=.9\linewidth]{figs/xyplotLandClass.png}
 \end{frame}
 
 \section{Raster Espacio-Temporales}
@@ -398,7 +447,8 @@ writeSTL('figs/DEM.stl')
 \begin{frame}[fragile,label=sec-4-2-1]{Small multiple}
  \lstset{language=R,label= ,caption= ,numbers=none}
 \begin{lstlisting}
-  levelplot(SISdm, layers=1:12, panel=panel.levelplot.raster)
+  levelplot(SISdm, layers=1:12,
+            panel=panel.levelplot.raster)
 \end{lstlisting}
 
 
@@ -422,8 +472,15 @@ writeSTL('figs/DEM.stl')
 \subsection{Gráficos EDA (Exploratory Data Analysis)}
 \label{sec-4-3}
 
+\begin{frame}[fragile,label=sec-4-3-1]{EDA}
+ \begin{itemize}
+\item Histograma (\texttt{histogram})
+\item Violin plot (\texttt{bwplot})
+\item Matriz de gráficos de dispersión (\texttt{splom})
+\end{itemize}
+\end{frame}
 
-\begin{frame}[fragile,label=sec-4-3-1]{Histograma}
+\begin{frame}[fragile,label=sec-4-3-2]{}
  \lstset{language=R,label= ,caption= ,numbers=none}
 \begin{lstlisting}
   histogram(SISdm, FUN=as.yearmon)
@@ -432,7 +489,7 @@ writeSTL('figs/DEM.stl')
 \includegraphics[width=.9\linewidth]{figs/SISdm_histogram.pdf}
 \end{frame}
 
-\begin{frame}[fragile,label=sec-4-3-2]{Violin plot}
+\begin{frame}[fragile,label=sec-4-3-3]{}
  \lstset{language=R,label= ,caption= ,numbers=none}
 \begin{lstlisting}
   bwplot(SISdm, FUN=as.yearmon)
@@ -441,7 +498,7 @@ writeSTL('figs/DEM.stl')
 \includegraphics[width=.9\linewidth]{figs/SISdm_boxplot.pdf}
 \end{frame}
 
-\begin{frame}[fragile,label=sec-4-3-3]{Matriz de gráficos de dispersión}
+\begin{frame}[fragile,label=sec-4-3-4]{}
  \lstset{language=R,label= ,caption= ,numbers=none}
 \begin{lstlisting}
   splom(SISmm, xlab='', plot.loess=TRUE)
@@ -454,7 +511,7 @@ writeSTL('figs/DEM.stl')
 \subsection{Gráficos espacio temporales}
 \label{sec-4-4}
 
-\begin{frame}[fragile,label=sec-4-4-1]{Hovmoller}
+\begin{frame}[fragile,label=sec-4-4-1]{}
  \lstset{language=R,label= ,caption= ,numbers=none}
 \begin{lstlisting}
   hovmoller(SISdm, par.settings=BTCTheme())
@@ -462,16 +519,17 @@ writeSTL('figs/DEM.stl')
 \includegraphics[width=.9\linewidth]{figs/SISdm_hovmoller_lat.pdf}
 \end{frame}
 
-\begin{frame}[fragile,label=sec-4-4-2]{xyplot}
+\begin{frame}[fragile,label=sec-4-4-2]{}
  \lstset{language=R,label= ,caption= ,numbers=none}
 \begin{lstlisting}
-  xyplot(SISdm, digits=1, col='black', lwd=0.2, alpha=0.6)
+  xyplot(SISdm, digits=1,
+         col='black', lwd=0.2, alpha=0.6)
 \end{lstlisting}
 
 \includegraphics[width=.9\linewidth]{figs/SISmm_xyplot.png}
 \end{frame}
 
-\begin{frame}[fragile,label=sec-4-4-3]{Horizonplot}
+\begin{frame}[fragile,label=sec-4-4-3]{}
  \lstset{language=R,label= ,caption= ,numbers=none}
 \begin{lstlisting}
   horizonplot(SISdm, digits=1,
@@ -504,8 +562,7 @@ writeSTL('figs/DEM.stl')
   names(cft) <- format(timeIndex, 'D%d_H%H')
 \end{lstlisting}
 
-\begin{block}{\url{http://mandeo.meteogalicia.es/thredds/catalogos/WRF_2D/catalog.html}}
-\end{block}
+\url{http://mandeo.meteogalicia.es/thredds/catalogos/WRF_2D/catalog.html}
 \end{frame}
 
 
@@ -516,16 +573,17 @@ writeSTL('figs/DEM.stl')
   library(rgdal)
   library(maps)
   library(mapdata)
-  
-  
   projLL <- CRS('+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0')
   cftLL <- projectExtent(cft, projLL)
   cftExt <- as.vector(bbox(cftLL))
   boundaries <- map('worldHires',
-                    xlim=cftExt[c(1,3)], ylim=cftExt[c(2,4)],
+                    xlim=cftExt[c(1,3)],
+                    ylim=cftExt[c(2,4)],
                     plot=FALSE)
-  boundaries <- map2SpatialLines(boundaries, proj4string=projLL)
-  boundaries <- spTransform(boundaries, CRS(projLCC2d))
+  boundaries <- map2SpatialLines(boundaries,
+                                 proj4string=projLL)
+  boundaries <- spTransform(boundaries,
+                            CRS(projLCC2d))
 \end{lstlisting}
 \end{frame}
 
@@ -536,7 +594,8 @@ writeSTL('figs/DEM.stl')
 \end{itemize}
 \lstset{language=R,label= ,caption= ,numbers=none}
 \begin{lstlisting}
-  cloudTheme <- rasterTheme(region=brewer.pal(n=9, 'Blues'))
+  cloudTheme <- rasterTheme(region=brewer.pal(n = 9,
+                                name = 'Blues'))
 \end{lstlisting}
 
 \begin{itemize}
@@ -545,9 +604,11 @@ writeSTL('figs/DEM.stl')
 \lstset{language=R,label= ,caption= ,numbers=none}
 \begin{lstlisting}
   tmp <- tempdir()
-  trellis.device(png, file=paste0(tmp, '/Rplot%02d.png'),
-                        res=300, width=1500, height=1500)
-  levelplot(cft, layout=c(1, 1), par.settings=cloudTheme) +
+  trellis.device(png,
+                 file=paste0(tmp, '/Rplot%02d.png'),
+                 res=300, width=1500, height=1500)
+  levelplot(cft, layout=c(1, 1),
+            par.settings=cloudTheme) +
       layer(sp.lines(boundaries, lwd=0.6))
   dev.off()
 \end{lstlisting}
@@ -561,7 +622,9 @@ writeSTL('figs/DEM.stl')
   movieCMD <- 'ffmpeg -r 6 -b 300k -i Rplot%02d.png output.mp4'
   system(movieCMD)
   file.remove(dir(pattern='Rplot'))
-  file.copy('output.mp4', paste0(old, '/figs/cft.mp4'), overwrite=TRUE)
+  file.copy('output.mp4',
+            paste0(old, '/figs/cft.mp4'),
+            overwrite=TRUE)
   setwd(old)
 \end{lstlisting}
 
@@ -575,11 +638,14 @@ writeSTL('figs/DEM.stl')
 \begin{lstlisting}
   levelplot(cft, layers=25:48, layout=c(6, 4),
             par.settings=cloudTheme,
-            names.attr=paste0(sprintf('%02d', 1:24), 'h'),
+            names.attr=paste0(
+                sprintf('%02d', 1:24), 'h'),
             panel=panel.levelplot.raster) +
       layer(sp.lines(boundaries, lwd=0.6))
 \end{lstlisting}
+\end{frame}
 
+\begin{frame}[label=sec-4-5-6]{}
 \includegraphics[width=.9\linewidth]{figs/cft.pdf}
 \end{frame}
 
@@ -613,8 +679,10 @@ writeSTL('figs/DEM.stl')
 
 \lstset{language=R,label= ,caption= ,numbers=none}
 \begin{lstlisting}
-  vectorplot(windField, isField=TRUE, par.settings=BTCTheme(),
-             colorkey=FALSE, scales=list(draw=FALSE))
+  vectorplot(windField, isField=TRUE,
+             par.settings=BTCTheme(),
+             colorkey=FALSE,
+             scales=list(draw=FALSE))
 \end{lstlisting}
 \end{frame}
 
@@ -642,8 +710,9 @@ posición, y degradación, codifican la dirección local del campo.
 \begin{frame}[fragile,label=sec-5-3-2]{\texttt{streamplot}}
  \lstset{language=R,label= ,caption= ,numbers=none}
 \begin{lstlisting}
-  myTheme <- streamTheme(region=rev(brewer.pal(n=4, name='Greys')),
-                                      symbol=BTC(n=9, beg=20))
+  myTheme <- streamTheme(region=rev(brewer.pal(n=4,
+                             name='Greys')),
+                         symbol=BTC(n=9, beg=20))
   streamplot(windField, isField=TRUE,
              par.settings=myTheme,
              droplet=list(pc=12),
@@ -657,8 +726,10 @@ posición, y degradación, codifican la dirección local del campo.
 \includegraphics[width=.9\linewidth]{figs/streamplot.pdf}
 \end{frame}
 
-\begin{frame}[label=sec-5-3-4]{Tu turno}
+\begin{frame}[label=sec-5-3-4]{}
+\begin{block}{Tu Turno}
 
+\end{block}
 \end{frame}
 % Emacs 24.3.1 (Org mode 8.2.7c)
 \end{document}
