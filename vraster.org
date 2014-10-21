@@ -160,6 +160,7 @@ http://cran.r-project.org/web/packages/raster/vignettes/Raster.pdf
 
 *** =plot3D= y =rgl=
 #+begin_src R
+  ## install.packages('rgl')
   plot3D(DEM, maxpixels=5e4)
 #+end_src
     
