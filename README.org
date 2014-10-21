@@ -1,0 +1,38 @@
+* Visualización de datos raster
+
+Este repositorio recoge el material del taller "Visualización de Datos Raster" de las [[http://r-es.org/VI%2BJornadas][VI Jornadas de Usuarios de R]] (2014).
+
+
+https://i.creativecommons.org/l/by-sa/4.0/88x31.png Este material está
+bajo una licencia [[http://creativecommons.org/licenses/by-sa/4.0/][Creative Commons CC-BY-SA 4.0]].
+
+Para utilizarlo puedes optar por descargar el fichero ZIP o usar =git=:
+
+#+BEGIN_EXAMPLE
+git clone https://github.com/oscarperpinan/vraster.git
+#+END_EXAMPLE
+
+El código asume que el directorio de trabajo contiene este repositorio. Por tanto, antes de empezar, debes usar =setwd=:
+#+begin_src R
+setwd('/ruta/de/mi/copia/local/')
+#+end_src
+
+Este taller emplea varios paquetes que debes tener instalados previamente:
+
+#+begin_src R
+install.packages('raster')
+
+install.packages('rgdal')
+install.packages('maptools')
+
+install.packages('ncdf4')
+## sólo si no puedes instalar ncdf4
+install.packages('ncdf')
+
+install.packages('rasterVis')
+
+install.packages('maps')
+install.packages('mapdata')
+
+install.packages('zoo')
+#+end_src
