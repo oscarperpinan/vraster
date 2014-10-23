@@ -63,6 +63,7 @@ dev.off()
 
 ## =plot3D= y =rgl=
 
+  ## install.packages('rgl')
   plot3D(DEM, maxpixels=5e4)
 
 ## El resultado puede exportarse en varios formatos tales como WebGL
